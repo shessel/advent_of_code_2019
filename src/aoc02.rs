@@ -22,6 +22,25 @@ fn intcode(mut program: Vec<i32>) -> Vec<i32> {
     program
 }
 
+fn intcode_find_input(memory: Vec<i32>) -> (i32, i32) {
+    let mut noun = 12;
+    let mut verb = 2;
+    loop {
+        let mut memory = memory.clone();
+        memory[1] = noun;
+        memory[2] = verb;
+        let result = intcode(memory)[0];
+        if result == 19690720 {
+            break (noun, verb);
+        } else if result < 19690720 {
+            noun += 1;
+        } else {
+            verb += 1;
+            noun = 1;
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -44,5 +63,11 @@ mod tests {
         input[1] = 12;
         input[2] = 2;
         assert_eq!(intcode(input)[0], 3716293);
+    }
+
+    #[test]
+    fn test_intcode_find_input() {
+        let input = parse_input_file_separator("data/input02", ",");
+        assert_eq!(intcode_find_input(input), (64, 29));
     }
 }
