@@ -1,26 +1,27 @@
 fn calc_fuel(module_weights: &[u32]) -> u32 {
-    module_weights.iter()
+    module_weights
+        .iter()
         // values < 9 would be <= 0 for (x/3) - 2
         .filter(|&&x| x > 8)
         .fold(0u32, |acc, x| acc + (x / 3) - 2)
 }
 
 fn calc_fuel_advanced(module_weights: &[u32]) -> u32 {
-    module_weights.iter()
-        .fold(0u32, |mut acc, x| {
-            let mut fuel = *x;
-            while fuel > 8 {
-                fuel = (fuel / 3) - 2;
-                acc += fuel;
-            }
-            acc
-        })
+    module_weights.iter().fold(0u32, |mut acc, x| {
+        let mut fuel = *x;
+        while fuel > 8 {
+            fuel = (fuel / 3) - 2;
+            acc += fuel;
+        }
+        acc
+    })
 }
 
 #[cfg(test)]
-mod tests
-{
+mod tests {
     use super::*;
+    use crate::util::*;
+
     #[test]
     fn test_calc_fuel_examples() {
         assert_eq!(calc_fuel(&[12]), 2);
@@ -35,15 +36,6 @@ mod tests
         assert_eq!(calc_fuel_advanced(&[14]), 2);
         assert_eq!(calc_fuel_advanced(&[1969]), 966);
         assert_eq!(calc_fuel_advanced(&[100756]), 50346);
-    }
-
-    fn parse_input_file(file_name: &str) -> Vec<u32> {
-        use std::fs;
-        fs::read_to_string(file_name)
-            .expect(&format!("Failed to read input file \"{}\"", file_name))
-            .split_whitespace()
-            .map(|line| line.parse().expect("Found non-numerical input"))
-            .collect()
     }
 
     #[test]
